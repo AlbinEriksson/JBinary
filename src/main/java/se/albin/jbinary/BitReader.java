@@ -18,18 +18,18 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it in big endian.
-	 * @param bits How many jbinary to read. Between 1 and 8.
-	 * @return A byte, with the desired jbinary, or -1, if the jbinary are not between 1 and 8, or there is no more data to
+	 * Reads a desired amount of bits from the data and returns it in big endian.
+	 * @param bits How many bits to read. Between 1 and 8.
+	 * @return A byte, with the desired bits, or -1 if the bits are not between 1 and 8, or there is no more data to
 	 * read.
 	 */
 	public byte getNextByte(int bits) { return getNextByte(bits, ByteOrder.BIG_ENDIAN); }
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it as a byte.
-	 * @param bits How many jbinary to read. Between 1 and 8.
-	 * @param order The byte order to write to.
-	 * @return A byte, with the desired jbinary, or -1, if the jbinary are not between 1 and 8, or there is no more data to
+	 * Reads a desired amount of bits from the data and returns it as a byte.
+	 * @param bits How many bits to read. Between 1 and 8.
+	 * @param order The byte order. Big endian means first goes first, little endian means reversed.
+	 * @return A byte, with the desired bits, or -1, if the bits are not between 1 and 8, or there is no more data to
 	 * read.
 	 */
 	public byte getNextByte(int bits, ByteOrder order)
@@ -70,18 +70,18 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it as an integer in big endian.
-	 * @param bits How many jbinary to read. Between 1 and 32.
-	 * @return An integer, with the desired jbinary, or -1, if the jbinary are not between 1 and 32, or there is no more data
+	 * Reads a desired amount of bits from the data and returns it as an integer in big endian.
+	 * @param bits How many bits to read. Between 1 and 32.
+	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
 	 * to read.
 	 */
 	public int getNextInt(int bits) { return getNextInt(bits, ByteOrder.BIG_ENDIAN); }
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it as an integer.
-	 * @param bits How many jbinary to read. Between 1 and 32.
-	 * @param order The byte order to write to.
-	 * @return An integer, with the desired jbinary, or -1, if the jbinary are not between 1 and 32, or there is no more data
+	 * Reads a desired amount of bits from the data and returns it as an integer.
+	 * @param bits How many bits to read. Between 1 and 32.
+	 * @param order The byte order. Big endian means first goes first, little endian means reversed.
+	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
 	 * to read.
 	 */
 	public int getNextInt(int bits, ByteOrder order)
@@ -93,18 +93,18 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it as a long in big endian.
-	 * @param bits How many jbinary to read. Between 1 and 64.
-	 * @return A long, with the desired jbinary, or -1, if the jbinary are not between 1 and 64, or there is no more data to
+	 * Reads a desired amount of bits from the data and returns it as a long in big endian.
+	 * @param bits How many bits to read. Between 1 and 64.
+	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
 	 * read.
 	 */
 	public long getNextLong(int bits) { return getNextLong(bits, ByteOrder.BIG_ENDIAN); }
 	
 	/**
-	 * Reads a desired amount of jbinary from the data and returns it as a long.
-	 * @param bits How many jbinary to read. Between 1 and 64.
-	 * @param order The byte order to write to.
-	 * @return A long, with the desired jbinary, or -1, if the jbinary are not between 1 and 64, or there is no more data to
+	 * Reads a desired amount of bits from the data and returns it as a long.
+	 * @param bits How many bits to read. Between 1 and 64.
+	 * @param order The byte order. Big endian means first goes first, little endian means reversed.
+	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
 	 * read.
 	 */
 	public long getNextLong(int bits, ByteOrder order)
@@ -176,7 +176,7 @@ public final class BitReader
 	
 	/**
 	 * Adds to the current bit index.
-	 * @param bits How many jbinary to jump.
+	 * @param bits How many bits to jump.
 	 */
 	public void addToBitIndex(int bits) { bitIndex += bits; }
 	
@@ -199,8 +199,8 @@ public final class BitReader
 	public int getByteSize() { return data.length; }
 	
 	/**
-	 * Gets the size of the data in jbinary. The same as getByteSize() * 8.
-	 * @return The size in jbinary.
+	 * Gets the size of the data in bits.
+	 * @return The size in bits.
 	 */
 	public int getBitSize() { return data.length << 3; }
 	
