@@ -13,7 +13,7 @@ If anything was unclear or missing in this readme, please contact me and I can f
 ##Example
 A date and time can be stored like this: `yyyyyyyy yyyMMMMd ddddHHHH Hmmmmmms sssss---`
 Each letter represents a bit which is needed for each value. "y" is for year, "M" is for month, etc. The "-" is unused. The space represents how the bytes are separated. As you can see, this might be a little difficult to read using standard bitwise operators. But with JBinary, the code looks something like this:
-
+```java
     BitReader bit = new BitReader(new byte[]
     {(byte)0xFC, (byte)0x11, (byte)0xC5, (byte)0x56, (byte)0xF0});
     int year   = bit.getNextInt(11); // 11 bits in a year (0 to 2047),
@@ -25,4 +25,5 @@ Each letter represents a bit which is needed for each value. "y" is for year, "M
     bit.addToBitIndex(3);            //  Unused.
     System.out.printf("%d-%02d-%02d %02d:%02d:%02d",
 	    year, month, day, hour, minute, second);
+```
 That code prints "2016-08-28 10:43:30" which is the time as of writing this.
