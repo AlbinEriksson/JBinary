@@ -1,21 +1,16 @@
 #JBinary [![](https://jitpack.io/v/AlbinEriksson/JBinary.svg)](https://jitpack.io/#AlbinEriksson/JBinary)
----
 JBinary is a binary file framework for Java 1.8.
 It aims to be a simple way to work with binary files, as a helper in your code.
 ##What does it do?
----
 Currently, it is used for reading sequences of bytes and read them bit by bit. An example exists below.
 ##How to setup
----
 You have to first setup either Maven or Gradle for your project.
 Then, go to https://jitpack.io/#AlbinEriksson/JBinary for instructions on how to get the latest release (click on "Get it" at the top of the list).
 ##Contributing
----
 Feel free to contribute with pull requests, issues, ideas etc. You can contact me through e-mail. Any help is very appreciated, as this is a solo project.
 ##Still need help?
 If anything was unclear or missing in this readme, please contact me and I can fix that.
 ##Example
----
 A date and time can be stored like this: `yyyyyyyy yyyMMMMd ddddHHHH Hmmmmmms sssss---`
 Each letter represents a bit which is needed for each value. "y" is for year, "M" is for month, etc. The "-" is unused. The space represents how the bytes are separated. As you can see, this might be a little difficult to read using standard bitwise operators. But with JBinary, the code looks something like this:
 
