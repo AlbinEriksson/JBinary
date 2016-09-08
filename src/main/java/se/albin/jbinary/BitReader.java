@@ -2,19 +2,61 @@ package se.albin.jbinary;
 
 import java.nio.ByteOrder;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class BitReader
 {
 	private final byte[] data;
 	
 	private int bitIndex;
+	private ByteOrder defaultByteOrder;
+	private BitOrder defaultBitOrder;
+	
+	/**
+	 * Creates a new bit reader using the byte array as data.<br>
+	 * Default byte order is big endian, and default bit order is most significant.
+	 * @param data Data to read from.
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see BitOrder#MOST_SIGNIFICANT
+	 */
+	public BitReader(byte[] data)
+	{
+		this(data, ByteOrder.BIG_ENDIAN, BitOrder.MOST_SIGNIFICANT);
+	}
+	
+	/**
+	 * Creates a new bit reader using the byte array as data.<br>
+	 * Default byte order is big endian.
+	 * @param data Data to read from.
+	 * @param defaultBitOrder Default bit order to use.
+	 */
+	public BitReader(byte[] data, BitOrder defaultBitOrder)
+	{
+		this(data, ByteOrder.BIG_ENDIAN, defaultBitOrder);
+	}
+	
+	/**
+	 * Creates a new bit reader using the byte array as data.<br>
+	 * Default bit order is most significant.
+	 * @param data Data to read from.
+	 * @param defaultByteOrder Default byte order to use.
+	 */
+	public BitReader(byte[] data, ByteOrder defaultByteOrder)
+	{
+		this(data, defaultByteOrder, BitOrder.MOST_SIGNIFICANT);
+	}
 	
 	/**
 	 * Creates a new bit reader using the byte array as data.
 	 * @param data Data to read from.
+	 * @param defaultByteOrder Default byte order to use.
+	 * @param defaultBitOrder Default bit order to use.
 	 */
-	public BitReader(byte[] data)
+	public BitReader(byte[] data, ByteOrder defaultByteOrder, BitOrder defaultBitOrder)
 	{
 		this.data = data;
+		
+		this.defaultByteOrder = defaultByteOrder;
+		this.defaultBitOrder = defaultBitOrder;
 	}
 	
 	/**
@@ -307,6 +349,40 @@ public final class BitReader
 	 * @return True if the end has been hit.
 	 */
 	public boolean hasEnded() { return (bitIndex >> 3) >= data.length; }
+	
+	/**
+	 * Sets the default byte order. When reading data without telling what byte order to use, it will use the byte order
+	 * specified here.
+	 * @param byteOrder The byte order to use when not specified. Nothing happens if null.
+	 */
+	public void setDefaultByteOrder(ByteOrder byteOrder)
+	{
+		if(byteOrder != null)
+			defaultByteOrder = byteOrder;
+	}
+	
+	/**
+	 * Sets the default bit order. When reading data without telling what bit order to use, it will use the bit order
+	 * specified here.
+	 * @param bitOrder The bit order to use when not specified. Nothing happens if null.
+	 */
+	public void setDefaultBitOrder(BitOrder bitOrder)
+	{
+		if(bitOrder != null)
+			defaultBitOrder = bitOrder;
+	}
+	
+	/**
+	 * Returns the current default byte order.
+	 * @return The default byte order.
+	 */
+	public ByteOrder getDefaultByteOrder() { return defaultByteOrder; }
+	
+	/**
+	 * Returns the current default bit order.
+	 * @return The default bit order.
+	 */
+	public BitOrder getDefaultBitOrder() { return defaultBitOrder; }
 	
 	private long getMask(int bits)
 	{
