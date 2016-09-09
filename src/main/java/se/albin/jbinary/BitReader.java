@@ -377,6 +377,7 @@ public final class BitReader
 	/**
 	 * Adds to the current bit index.
 	 * @param bits How many bits to jump.
+	 * @throws IndexOutOfBoundsException If the jump will go out of bounds.
 	 */
 	public void addBitIndex(int bits)
 	{
