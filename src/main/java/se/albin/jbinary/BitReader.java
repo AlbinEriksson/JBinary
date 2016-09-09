@@ -336,31 +336,57 @@ public final class BitReader
 	/**
 	 * Goes to the desired byte in the data, at the first bit.
 	 * @param byteIndex The pointer to go to.
+	 * @throws IndexOutOfBoundsException If the pointed byte is out of bounds.
 	 */
-	public void setByteIndex(int byteIndex) { bitIndex = byteIndex << 3; }
+	public void setByteIndex(int byteIndex)
+	{
+		if(0 <= byteIndex && byteIndex < getByteSize())
+			bitIndex = byteIndex << 3;
+		else
+			throw new IndexOutOfBoundsException("Setting byte index out of bounds!");
+	}
 	
 	/**
 	 * Goes to the desired bit in the data. Bit index 8 means the same thing was byte index 1.
 	 * @param bitIndex The bit pointer to go to.
+	 * @throws IndexOutOfBoundsException If the pointed bit is out of bounds.
 	 */
-	public void setBitIndex(int bitIndex) { this.bitIndex = bitIndex; }
+	public void setBitIndex(int bitIndex)
+	{
+		if(0 <= bitIndex && bitIndex < getBitSize())
+			this.bitIndex = bitIndex;
+		else
+			throw new IndexOutOfBoundsException("Setting bit index out of bounds!");
+	}
 	
 	/**
 	 * Adds to the current byte index. Goes to first bit.
 	 * @param bytes How many bytes to jump.
+	 * @throws IndexOutOfBoundsException If the jump will go out of bounds.
 	 */
 	public void addByteIndex(int bytes)
 	{
-		bitIndex &= 0xFFFFFFF8;
+		int nextIndex = bitIndex & 0xFFFFFFF8 + bytes << 3;
 		
-		bitIndex += bytes << 3;
+		if(0 <= nextIndex && nextIndex < getBitSize())
+			bitIndex = nextIndex;
+		else
+			throw new IndexOutOfBoundsException("Adding byte index out of bounds!");
 	}
 	
 	/**
 	 * Adds to the current bit index.
 	 * @param bits How many bits to jump.
 	 */
-	public void addBitIndex(int bits) { bitIndex += bits; }
+	public void addBitIndex(int bits)
+	{
+		int nextIndex = bitIndex + bits;
+		
+		if(0 <= nextIndex && nextIndex < getBitSize())
+			bitIndex = nextIndex;
+		else
+			throw new IndexOutOfBoundsException("Adding bit index out of bounds!");
+	}
 	
 	/**
 	 * Gets the current byte index
