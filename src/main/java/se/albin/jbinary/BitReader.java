@@ -60,44 +60,40 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads from the data and returns it as a byte. (Big endian, most significant bit order)
+	 * Reads from the data and returns it as a byte. Uses the default bit and byte order.
 	 * @param bits How many bits to read. Between 1 and 8.
-	 * @return A byte, with the desired bits, or -1 if the bits are not between 1 and 8, or there is no more data to
-	 * read.
+	 * @return A byte from the data, or -1 if the bits are not between 1 and 8, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
 	 */
-	public byte getNextByte(int bits) { return getNextByte(bits, ByteOrder.BIG_ENDIAN, BitOrder.MOST_SIGNIFICANT); }
+	public byte getNextByte(int bits) { return getNextByte(bits, defaultByteOrder, defaultBitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as a byte. (Big endian)<br>
-	 *
+	 * Reads from the data and returns it as a byte. Uses the default byte order.
 	 * @param bits How many bits to read. Between 1 and 8.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return A byte, with the desired bits, or -1, if the bits are not between 1 and 8, or there is no more data to
-	 * read.
+	 * @param bitOrder The bit order.
+	 * @return A byte from the data, or -1, if the bits are not between 1 and 8, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
 	 */
-	public byte getNextByte(int bits, BitOrder bitOrder) { return getNextByte(bits, ByteOrder.BIG_ENDIAN, bitOrder); }
+	public byte getNextByte(int bits, BitOrder bitOrder) { return getNextByte(bits, defaultByteOrder, bitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as a byte. (Most significant bit order)<br>
+	 * Reads from the data and returns it as a byte. Uses the default bit order.<br>
 	 * @param bits How many bits to read. Between 1 and 8.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @return A byte, with the desired bits, or -1, if the bits are not between 1 and 8, or there is no more data to
-	 * read.
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * @param byteOrder The byte order.
+	 * @return A byte from the data, or -1, if the bits are not between 1 and 8, or there is no more data to read.
+	 * @see BitOrder
 	 */
-	public byte getNextByte(int bits, ByteOrder byteOrder) { return getNextByte(bits, byteOrder,
-	                                                                            BitOrder.MOST_SIGNIFICANT); }
+	public byte getNextByte(int bits, ByteOrder byteOrder) { return getNextByte(bits, byteOrder, defaultBitOrder); }
 	
 	/**
 	 * Reads from the data and returns it as a byte.
 	 * @param bits How many bits to read. Between 1 and 8.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return A byte, with the desired bits, or -1, if the bits are not between 1 and 8, or there is no more data to
-	 * read.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return A byte from the data, or -1, if the bits are not between 1 and 8, or there is no more data to read.
 	 */
 	public byte getNextByte(int bits, ByteOrder byteOrder, BitOrder bitOrder)
 	{
@@ -154,43 +150,87 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads from the data and returns it as an integer. (Big endian, most significant bit order)
-	 * @param bits How many bits to read. Between 1 and 32.
-	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
-	 * to read.
+	 * Reads from the data and returns it as a short. Uses the default bit and byte order.
+	 * @param bits How many bits to read. Between 1 and 16.
+	 * @return A short from the data, or -1, if the bits are not between 1 and 16, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
 	 */
-	public int getNextInt(int bits) { return getNextInt(bits, ByteOrder.BIG_ENDIAN, BitOrder.MOST_SIGNIFICANT); }
+	public short getNextShort(int bits) { return getNextShort(bits, defaultByteOrder, defaultBitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as an integer. (Big endian)
-	 * @param bits How many bits to read. Between 1 and 32.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
-	 * to read.
+	 * Reads from the data and returns it as a short. Uses the default byte order.
+	 * @param bits How many bits to read. Between 1 and 16.
+	 * @param bitOrder The bit order.
+	 * @return A short from the data, or -1, if the bits are not between 1 and 16, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
 	 */
-	public int getNextInt(int bits, BitOrder bitOrder) { return getNextInt(bits, ByteOrder.BIG_ENDIAN, bitOrder); }
+	public short getNextShort(int bits, BitOrder bitOrder) { return getNextShort(bits, defaultByteOrder, bitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as an integer. (Most significant bit order)
-	 * @param bits How many bits to read. Between 1 and 32.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
-	 * to read.
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * Reads from the data and returns it as a a short. Uses the default bit order.
+	 * @param bits How many bits to read. Between 1 and 16.
+	 * @param byteOrder The byte order.
+	 * @return A short from the data, or -1, if the bits are not between 1 and 16, or there is no more data to read.
+	 * @see BitOrder
 	 */
-	public int getNextInt(int bits, ByteOrder byteOrder) { return getNextByte(bits, byteOrder,
-	                                                                          BitOrder.MOST_SIGNIFICANT); }
+	public short getNextShort(int bits, ByteOrder byteOrder) { return getNextShort(bits, byteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a short.
+	 * @param bits How many bits to read. Between 1 and 16.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return A short from the data, or -1, if the bits are not between 1 and 16, or there is no more data to read.
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
+	 */
+	public short getNextShort(int bits, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		if(16 >= bits && bits >= 1)
+			return (short)getNextLong(bits, byteOrder, bitOrder);
+		else
+			return -1;
+	}
+	
+	/**
+	 * Reads from the data and returns it as an integer. Uses the default bit and byte order.
+	 * @param bits How many bits to read. Between 1 and 32.
+	 * @return An integer from the data, or -1, if the bits are not between 1 and 32, or there is no more data to read.
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
+	 */
+	public int getNextInt(int bits) { return getNextInt(bits, defaultByteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as an integer. Uses the default byte order.
+	 * @param bits How many bits to read. Between 1 and 32.
+	 * @param bitOrder The bit order.
+	 * @return An integer from the data, or -1, if the bits are not between 1 and 32, or there is no more data to read.
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 */
+	public int getNextInt(int bits, BitOrder bitOrder) { return getNextInt(bits, defaultByteOrder, bitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as an integer. Uses the default bit order.
+	 * @param bits How many bits to read. Between 1 and 32.
+	 * @param byteOrder The byte order.
+	 * @return An integer from the data, or -1, if the bits are not between 1 and 32, or there is no more data to read.
+	 * @see BitOrder
+	 */
+	public int getNextInt(int bits, ByteOrder byteOrder) { return getNextByte(bits, byteOrder, defaultBitOrder); }
 	
 	/**
 	 * Reads from the data and returns it as an integer.
 	 * @param bits How many bits to read. Between 1 and 32.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return An integer, with the desired bits, or -1, if the bits are not between 1 and 32, or there is no more data
-	 * to read.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return An integer from the data, or -1, if the bits are not between 1 and 32, or there is no more data to read.
 	 */
 	public int getNextInt(int bits, ByteOrder byteOrder, BitOrder bitOrder)
 	{
@@ -201,43 +241,40 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads from the data and returns it as a long. (Big endian, most significant bit order)
+	 * Reads from the data and returns it as a long. Uses the default bit and byte order.
 	 * @param bits How many bits to read. Between 1 and 64.
-	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
-	 * read.
+	 * @return A long from the data. or -1, if the bits are not between 1 and 64, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
 	 */
-	public long getNextLong(int bits) { return getNextLong(bits, ByteOrder.BIG_ENDIAN, BitOrder.MOST_SIGNIFICANT); }
+	public long getNextLong(int bits) { return getNextLong(bits, defaultByteOrder, defaultBitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as a long. (Big endian)
+	 * Reads from the data and returns it as a long. Uses the default byte order.
 	 * @param bits How many bits to read. Between 1 and 64.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
-	 * read.
+	 * @param bitOrder The bit order.
+	 * @return A long from the data, or -1, if the bits are not between 1 and 64, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
 	 */
-	public long getNextLong(int bits, BitOrder bitOrder) { return getNextLong(bits, ByteOrder.BIG_ENDIAN, bitOrder); }
+	public long getNextLong(int bits, BitOrder bitOrder) { return getNextLong(bits, defaultByteOrder, bitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as a long. (Most significant bit order)
+	 * Reads from the data and returns it as a long. Uses the default bit order.
 	 * @param bits How many bits to read. Between 1 and 64.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
-	 * read.
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * @param byteOrder The byte order.
+	 * @return A long from the data, or -1, if the bits are not between 1 and 64, or there is no more data to read.
+	 * @see BitOrder
 	 */
-	public long getNextLong(int bits, ByteOrder byteOrder) { return getNextLong(bits, byteOrder,
-	                                                                            BitOrder.MOST_SIGNIFICANT); }
+	public long getNextLong(int bits, ByteOrder byteOrder) { return getNextLong(bits, byteOrder, defaultBitOrder); }
 	
 	/**
 	 * Reads from the data and returns it as a long.
 	 * @param bits How many bits to read. Between 1 and 64.
-	 * @param byteOrder The byte order. Big endian means first goes first, little endian means reversed.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return A long, with the desired bits, or -1, if the bits are not between 1 and 64, or there is no more data to
-	 * read.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return A long from the data, or -1, if the bits are not between 1 and 64, or there is no more data to read.
 	 */
 	public long getNextLong(int bits, ByteOrder byteOrder, BitOrder bitOrder)
 	{
@@ -283,21 +320,21 @@ public final class BitReader
 	}
 	
 	/**
-	 * Reads from the data and returns it as a boolean. (Most significant bit order)
-	 * @return True if the bit was 1, or false if the end was hit.
-	 * @see BitOrder#MOST_SIGNIFICANT
+	 * Reads from the data and returns it as a boolean. Uses the default bit order.
+	 * @return True if the bit was 1, or false if the bit was 0, or the end was hit.
+	 * @see BitOrder
 	 */
-	public boolean getNextBoolean() { return getNextBoolean(BitOrder.MOST_SIGNIFICANT); }
+	public boolean getNextBoolean() { return getNextBoolean(defaultBitOrder); }
 	
 	/**
 	 * Reads from the data and returns it as a boolean.
-	 * @param bitOrder The bit order. Most significant means left ro right, least significant means right to left.
-	 * @return True if the bit was 1, or false if the end was hit.
+	 * @param bitOrder The bit order.
+	 * @return True if the bit was 1, or false if the bit was 0, or the end was hit.
 	 */
 	public boolean getNextBoolean(BitOrder bitOrder) { return !hasEnded() && getNextByte(1, bitOrder) == 1; }
 	
 	/**
-	 * Goes to the desired byte in the data.
+	 * Goes to the desired byte in the data, at the first bit.
 	 * @param byteIndex The pointer to go to.
 	 */
 	public void setByteIndex(int byteIndex) { bitIndex = byteIndex << 3; }
@@ -309,10 +346,15 @@ public final class BitReader
 	public void setBitIndex(int bitIndex) { this.bitIndex = bitIndex; }
 	
 	/**
-	 * Adds to the current byte index.
+	 * Adds to the current byte index. Goes to first bit.
 	 * @param bytes How many bytes to jump.
 	 */
-	public void addByteIndex(int bytes) { bitIndex += bytes << 3; }
+	public void addByteIndex(int bytes)
+	{
+		bitIndex &= 0xFFFFFFF8;
+		
+		bitIndex += bytes << 3;
+	}
 	
 	/**
 	 * Adds to the current bit index.
