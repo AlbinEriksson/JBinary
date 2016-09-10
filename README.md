@@ -21,7 +21,7 @@ Then, add the JBinary dependency:
 	<dependency>
 		<groupId>com.github.AlbinEriksson</groupId>
 		<artifactId>JBinary</artifactId>
-		<version>1.1</version>
+		<version>1.2</version>
 	</dependency>
 </dependencies>
 ```
@@ -37,7 +37,7 @@ allprojects {
 Then, add the JBinary dependency:
 ```gradle
 dependencies {
-	compile 'com.github.AlbinEriksson:JBinary:1.1'
+	compile 'com.github.AlbinEriksson:JBinary:1.2'
 }
 ```
 ###Development versions
