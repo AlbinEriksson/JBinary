@@ -243,7 +243,7 @@ public final class BitReader
 	/**
 	 * Reads from the data and returns it as a long. Uses the default bit and byte order.
 	 * @param bits How many bits to read. Between 1 and 64.
-	 * @return A long from the data. or -1, if the bits are not between 1 and 64, or there is no more data to read.
+	 * @return A long from the data, or -1, if the bits are not between 1 and 64, or there is no more data to read.
 	 * @see ByteOrder#BIG_ENDIAN
 	 * @see ByteOrder#LITTLE_ENDIAN
 	 * @see BitOrder
@@ -317,6 +317,86 @@ public final class BitReader
 		}
 		
 		return -1;
+	}
+	
+	/**
+	 * Reads from the data and returns it as a float. Uses the default bit and byte order.
+	 * @return A float from the data, or NaN, if there is not enough remaining bits. (Floats are 32-bit)
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
+	 */
+	public float getNextFloat() { return getNextFloat(defaultByteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a float. Uses the default byte order.
+	 * @param bitOrder The bit order.
+	 * @return A float from the data, or NaN, if there is not enough remaining bits. (Floats are 32-bit)
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 */
+	public float getNextFloat(BitOrder bitOrder) { return getNextFloat(defaultByteOrder, bitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a float. Uses the default bit order.
+	 * @param byteOrder The byte order.
+	 * @return A float from the data, or NaN, if there is not enough remaining bits. (Floats are 32-bit)
+	 * @see BitOrder
+	 */
+	public float getNextFloat(ByteOrder byteOrder) { return getNextFloat(byteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a float.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return A float from the data, or NaN, if there is not enough remaining bits. (Floats are 32-bit)
+	 */
+	public float getNextFloat(ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		if(getBitIndex() + 32 > getBitSize())
+			return Float.NaN;
+		
+		return Float.intBitsToFloat(getNextInt(32, byteOrder, bitOrder));
+	}
+	
+	/**
+	 * Reads from the data and returns it as a double. Uses the default bit and byte order.
+	 * @return A double from the data, or NaN, if there is not enough remaining bits. (Doubles are 64-bit)
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 * @see BitOrder
+	 */
+	public double getNextDouble() { return getNextDouble(defaultByteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a double. Uses the default byte order.
+	 * @param bitOrder The bit order.
+	 * @return A double from the data, or NaN, if there is not enough remaining bits. (Doubles are 64-bit)
+	 * @see ByteOrder#BIG_ENDIAN
+	 * @see ByteOrder#LITTLE_ENDIAN
+	 */
+	public double getNextDouble(BitOrder bitOrder) { return getNextDouble(defaultByteOrder, bitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a double. Uses the default bit order.
+	 * @param byteOrder The byte order.
+	 * @return A double from the data, or NaN, if there is not enough remaining bits. (Doubles are 64-bit)
+	 * @see BitOrder
+	 */
+	public double getNextDouble(ByteOrder byteOrder) { return getNextDouble(byteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a double.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return A double from the data, or NaN, if there is not enough remaining bits. (Doubles are 64-bit)
+	 */
+	public double getNextDouble(ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		if(getBitIndex() + 64 > getBitSize())
+			return Double.NaN;
+		
+		return Double.longBitsToDouble(getNextLong(64, byteOrder, bitOrder));
 	}
 	
 	/**
