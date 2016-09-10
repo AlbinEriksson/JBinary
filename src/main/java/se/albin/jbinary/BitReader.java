@@ -223,7 +223,7 @@ public final class BitReader
 	 * @return An integer from the data, or -1, if the bits are not between 1 and 32, or there is no more data to read.
 	 * @see BitOrder
 	 */
-	public int getNextInt(int bits, ByteOrder byteOrder) { return getNextByte(bits, byteOrder, defaultBitOrder); }
+	public int getNextInt(int bits, ByteOrder byteOrder) { return getNextInt(bits, byteOrder, defaultBitOrder); }
 	
 	/**
 	 * Reads from the data and returns it as an integer.
@@ -285,7 +285,7 @@ public final class BitReader
 				bits = data.length - bitIndex;
 			
 			if(bits <= 8)
-				return Byte.toUnsignedLong(getNextByte(bits, bitOrder));
+				return Byte.toUnsignedLong(getNextByte(bits, byteOrder, bitOrder));
 			else
 			{
 				int firstByte = 8 - (bitIndex & 7);
@@ -293,24 +293,24 @@ public final class BitReader
 				int byteBits = ((bytes - 1) << 3) + firstByte;
 				int lastByte = bits - byteBits;
 				
-				long out = Byte.toUnsignedLong(getNextByte(firstByte, bitOrder));
+				long out = Byte.toUnsignedLong(getNextByte(firstByte, byteOrder, bitOrder));
 				
 				if(byteOrder == ByteOrder.BIG_ENDIAN)
 					out <<= bits - firstByte;
 				
 				for(int i = 1; i < bytes; i++)
 					if(byteOrder == ByteOrder.BIG_ENDIAN)
-						out |= Byte.toUnsignedLong(getNextByte(8, bitOrder)) << (bits - firstByte - (i << 3));
+						out |= Byte.toUnsignedLong(getNextByte(8, byteOrder, bitOrder)) << (bits - firstByte - (i << 3));
 					else
-						out |= Byte.toUnsignedLong(getNextByte(8, bitOrder)) << (firstByte - ((i - 1) << 3));
+						out |= Byte.toUnsignedLong(getNextByte(8, byteOrder, bitOrder)) << (firstByte - ((i - 1) << 3));
 				
 				if(lastByte > 0)
 					if(byteOrder == ByteOrder.BIG_ENDIAN)
-						out |= Byte.toUnsignedLong(getNextByte(lastByte, bitOrder));
+						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder));
 					else if(firstByte == 8)
-						out |= Byte.toUnsignedLong(getNextByte(lastByte, bitOrder)) << (bytes << 3);
+						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder)) << (bytes << 3);
 					else
-						out |= Byte.toUnsignedLong(getNextByte(lastByte, bitOrder)) << ((bytes << 3) - lastByte);
+						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder)) << ((bytes << 3) - lastByte);
 				
 				return out;
 			}
@@ -334,59 +334,86 @@ public final class BitReader
 	public boolean getNextBoolean(BitOrder bitOrder) { return !hasEnded() && getNextByte(1, bitOrder) == 1; }
 	
 	/**
-	 * Goes to the desired byte in the data, at the first bit.
+	 * Goes to the desired byte in the data, at the first bit. Returns true if it succeeds. If the pointed bit is out of
+	 * bounds, it will stay at its current position.
 	 * @param byteIndex The pointer to go to.
-	 * @throws IndexOutOfBoundsException If the pointed byte is out of bounds.
+	 * @return True if it succeeded, or false if the pointed bit was out of bounds.
 	 */
-	public void setByteIndex(int byteIndex)
+	public boolean setByteIndex(int byteIndex)
 	{
-		if(0 <= byteIndex && byteIndex < getByteSize())
+		if(0 <= byteIndex && byteIndex <= getByteSize())
+		{
 			bitIndex = byteIndex << 3;
+			return true;
+		}
 		else
-			throw new IndexOutOfBoundsException("Setting byte index out of bounds!");
+			return false;
 	}
 	
 	/**
-	 * Goes to the desired bit in the data. Bit index 8 means the same thing was byte index 1.
+	 * Goes to the desired bit in the data. Returns true if it succeeds. If the pointed bit is out of bounds, it will
+	 * stay at its current position.
 	 * @param bitIndex The bit pointer to go to.
-	 * @throws IndexOutOfBoundsException If the pointed bit is out of bounds.
+	 * @return True if it succeeded, or false if the pointed bit was out of bounds.
 	 */
-	public void setBitIndex(int bitIndex)
+	public boolean setBitIndex(int bitIndex)
 	{
-		if(0 <= bitIndex && bitIndex < getBitSize())
+		if(0 <= bitIndex && bitIndex <= getBitSize())
+		{
 			this.bitIndex = bitIndex;
+			return true;
+		}
 		else
-			throw new IndexOutOfBoundsException("Setting bit index out of bounds!");
+			return false;
 	}
 	
 	/**
-	 * Adds to the current byte index. Goes to first bit.
+	 * Adds to the current byte index. Goes to first bit. Returns true if the end was not hit. If the end is hit, it
+	 * will go to the end.
 	 * @param bytes How many bytes to jump.
-	 * @throws IndexOutOfBoundsException If the jump will go out of bounds.
+	 * @return True if it succeeded, or false if the end was hit.
 	 */
-	public void addByteIndex(int bytes)
+	public boolean addByteIndex(int bytes)
 	{
+		if(hasEnded())
+			return false;
+		
 		int nextIndex = bitIndex & 0xFFFFFFF8 + bytes << 3;
 		
-		if(0 <= nextIndex && nextIndex < getBitSize())
+		if(0 <= nextIndex && nextIndex <= getBitSize())
+		{
 			bitIndex = nextIndex;
+			return true;
+		}
 		else
-			throw new IndexOutOfBoundsException("Adding byte index out of bounds!");
+		{
+			bitIndex = getBitSize();
+			return false;
+		}
 	}
 	
 	/**
-	 * Adds to the current bit index.
+	 * Adds to the current bit index. Returns true if the end was not hit. If the end is hit, it will go to the end.
 	 * @param bits How many bits to jump.
-	 * @throws IndexOutOfBoundsException If the jump will go out of bounds.
+	 * @return True if it succeeded, or false if the end was hit.
 	 */
-	public void addBitIndex(int bits)
+	public boolean addBitIndex(int bits)
 	{
+		if(hasEnded())
+			return false;
+		
 		int nextIndex = bitIndex + bits;
 		
-		if(0 <= nextIndex && nextIndex < getBitSize())
+		if(0 <= nextIndex && nextIndex <= getBitSize())
+		{
 			bitIndex = nextIndex;
+			return true;
+		}
 		else
-			throw new IndexOutOfBoundsException("Adding bit index out of bounds!");
+		{
+			bitIndex = getBitSize();
+			return false;
+		}
 	}
 	
 	/**
@@ -457,7 +484,7 @@ public final class BitReader
 	{
 		if(64 >= bits && bits >= 0)
 		{
-			byte mask = 0;
+			long mask = 0;
 			for(int i = 0; i < bits; i++)
 				mask |= 1 << i;
 			return mask;
