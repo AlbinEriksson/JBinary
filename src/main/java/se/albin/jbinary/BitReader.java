@@ -310,7 +310,7 @@ public final class BitReader
 					else if(firstByte == 8)
 						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder)) << (bytes << 3);
 					else
-						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder)) << ((bytes << 3) - lastByte);
+						out |= Byte.toUnsignedLong(getNextByte(lastByte, byteOrder, bitOrder)) << (bits - lastByte);
 				
 				return out;
 			}
