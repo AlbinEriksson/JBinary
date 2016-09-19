@@ -302,7 +302,7 @@ public final class BitReader
 					if(byteOrder == ByteOrder.BIG_ENDIAN)
 						out |= Byte.toUnsignedLong(getNextByte(8, byteOrder, bitOrder)) << (bits - firstByte - (i << 3));
 					else
-						out |= Byte.toUnsignedLong(getNextByte(8, byteOrder, bitOrder)) << (firstByte - ((i - 1) << 3));
+						out |= Byte.toUnsignedLong(getNextByte(8, byteOrder, bitOrder)) << (firstByte + ((i - 1) << 3));
 				
 				if(lastByte > 0)
 					if(byteOrder == ByteOrder.BIG_ENDIAN)
