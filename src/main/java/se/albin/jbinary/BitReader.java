@@ -80,7 +80,7 @@ public final class BitReader
 	public byte getNextByte(int bits, BitOrder bitOrder) { return getNextByte(bits, defaultByteOrder, bitOrder); }
 	
 	/**
-	 * Reads from the data and returns it as a byte. Uses the default bit order.<br>
+	 * Reads from the data and returns it as a byte. Uses the default bit order.
 	 * @param bits How many bits to read. Between 1 and 8.
 	 * @param byteOrder The byte order.
 	 * @return A byte from the data, or -1, if the bits are not between 1 and 8, or there is no more data to read.
