@@ -1,8 +1,10 @@
 package se.albin.jbinary;
 
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 public final class BitWriter
 {
 	private static final int DEFAULT_INITIAL_SIZE = 64;
@@ -145,7 +147,7 @@ public final class BitWriter
 				return false;
 			
 			if(byteIndex >= data.length)
-			  expandData(bufferSize);
+				expandData(bufferSize);
 			
 			if(subIndex == 0)
 			{
@@ -429,7 +431,7 @@ public final class BitWriter
 	public boolean putDouble(double d, ByteOrder byteOrder) { return putDouble(d, byteOrder, defaultBitOrder); }
 	
 	/**
-	 * Writes one double to the data (Doubles must be 64-bit). Uses the default bit and byte order.
+	 * Writes one double to the data (Doubles must be 64-bit).
 	 * @param d Double to write.
 	 * @param byteOrder The byte order.
 	 * @param bitOrder The bit order.
@@ -455,6 +457,117 @@ public final class BitWriter
 	 * different from the bit order used.
 	 */
 	public boolean putBoolean(boolean b, BitOrder bitOrder) { return putByte((byte)(b ? 1 : 0), 1, bitOrder); }
+	
+	/**
+	 * Writes all bytes in one byte array to the data. Uses the default bit and byte order.
+	 * @param a Byte array to write.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putByteArray(byte[] a)
+	{
+		return putByteArray(a, defaultByteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes all bytes in one byte array to the data. Uses the default byte order.
+	 * @param a Byte array to write.
+	 * @param bitOrder The bit order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putByteArray(byte[] a, BitOrder bitOrder)
+	{
+		return putByteArray(a, defaultByteOrder, bitOrder);
+	}
+	
+	/**
+	 * Writes all bytes in one byte array to the data. Uses the default bit order.
+	 * @param a Byte array to write.
+	 * @param byteOrder The byte order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putByteArray(byte[] a, ByteOrder byteOrder)
+	{
+		return putByteArray(a, byteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes all bytes in one byte array to the data.
+	 * @param a Byte array to write.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putByteArray(byte[] a, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		for(byte b : a)
+			if(!putByte(b, 8, byteOrder, bitOrder))
+				return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Writes one string to the data. Uses the default bit and byte order.
+	 * @param s String to write.
+	 * @param charset Charset to use.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putString(String s, Charset charset)
+	{
+		return putString(s, charset, defaultByteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes one string to the data. Uses the default byte order.
+	 * @param s String to write.
+	 * @param charset Charset to use.
+	 * @param bitOrder The bit order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putString(String s, Charset charset, BitOrder bitOrder)
+	{
+		return putString(s, charset, defaultByteOrder, bitOrder);
+	}
+	
+	/**
+	 * Writes one string to the data. Uses the default bit order.
+	 * @param s String to write.
+	 * @param charset Charset to use.
+	 * @param byteOrder The byte order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putString(String s, Charset charset, ByteOrder byteOrder)
+	{
+		return putString(s, charset, byteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes one string to the data. Uses the default bit and byte order.
+	 * @param s String to write.
+	 * @param charset Charset to use.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @return True if the data was written successfully, or false if the active bit order of the current byte is
+	 * different from the bit order used.
+	 */
+	public boolean putString(String s, Charset charset, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		byte[] a = charset.encode(s).array();
+		
+		int i = a.length - 1;
+		
+		while(i >= 0 && a[i] == 0)
+			i--;
+		
+		return putByteArray(Arrays.copyOf(a, i + 1), byteOrder, bitOrder);
+	}
 	
 	/**
 	 * Expands the data by some amount of bytes.
@@ -574,6 +687,18 @@ public final class BitWriter
 	 * @return The size in bits.
 	 */
 	public int getBitSize() { return data.length << 3; }
+	
+	/**
+	 * Gets the amount of remaining bytes in the data.
+	 * @return The amount of remaining bytes.
+	 */
+	public int getRemainingBytes() { return data.length - getByteIndex(); }
+	
+	/**
+	 * Gets the amount of remaining bits in the data.
+	 * @return The amount of remaining bits.
+	 */
+	public int getRemainingBits() { return getBitSize() - bitIndex; }
 	
 	/**
 	 * Gets the data that has been written. The data will be cut after the last byte, i.e. you won't have trailing 0

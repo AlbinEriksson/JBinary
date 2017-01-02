@@ -1,8 +1,9 @@
 package se.albin.jbinary;
 
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 public final class BitReader
 {
 	private final byte[] data;
@@ -414,6 +415,94 @@ public final class BitReader
 	public boolean getNextBoolean(BitOrder bitOrder) { return !hasEnded() && getNextByte(1, bitOrder) == 1; }
 	
 	/**
+	 * Reads from the data and returns it as a byte array. Uses the default bit and byte order.
+	 * @param length The amount of bytes to read.
+	 * @return A byte array from the data. The result becomes shortened if there is no more data to read.
+	 */
+	public byte[] getNextByteArray(int length) { return getNextByteArray(length, defaultByteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a byte array. Uses the default byte order.
+	 * @param bitOrder The bit order.
+	 * @param length The amount of bytes to read.
+	 * @return A byte array from the data. The result becomes shortened if there is no more data to read.
+	 */
+	public byte[] getNextByteArray(int length, BitOrder bitOrder) { return getNextByteArray(length, defaultByteOrder, bitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a byte array. Uses the default bit order.
+	 * @param byteOrder The byte order.
+	 * @param length The amount of bytes to read.
+	 * @return A byte array from the data. The result becomes shortened if there is no more data to read.
+	 */
+	public byte[] getNextByteArray(int length, ByteOrder byteOrder) { return getNextByteArray(length, byteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads from the data and returns it as a byte array.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @param length The amount of bytes to read.
+	 * @return A byte array from the data. The result becomes shortened if there is no more data to read.
+	 */
+	public byte[] getNextByteArray(int length, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		byte[] out = new byte[Math.min(length, getRemainingBytes())];
+		
+		for(int i = 0; i < length; i++)
+			out[i] = getNextByte(8, byteOrder, bitOrder);
+		
+		return out;
+	}
+	
+	/**
+	 * Reads from the data and returns it as a string. Uses the default bit and byte order.
+	 * @param charset The charset.
+	 * @param length The amount of bytes to read.
+	 * @return A string from the data, will become shorter if there is no more data to read.
+	 */
+	public String getNextString(int length, Charset charset)
+	{
+		return getNextString(length, charset, defaultByteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Reads from the data and returns it as a string. Uses the default byte order.
+	 * @param bitOrder The bit order.
+	 * @param charset The charset.
+	 * @param length The amount of bytes to read.
+	 * @return A string from the data, will become shorter if there is no more data to read.
+	 */
+	public String getNextString(int length, Charset charset, BitOrder bitOrder)
+	{
+		return getNextString(length, charset, defaultByteOrder, bitOrder);
+	}
+	
+	/**
+	 * Reads from the data and returns it as a string. Uses the default bit order.
+	 * @param byteOrder The byte order.
+	 * @param charset The charset.
+	 * @param length The amount of bytes to read.
+	 * @return A string from the data, will become shorter if there is no more data to read.
+	 */
+	public String getNextString(int length, Charset charset, ByteOrder byteOrder)
+	{
+		return getNextString(length, charset, byteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Reads from the data and returns it as a string.
+	 * @param byteOrder The byte order.
+	 * @param bitOrder The bit order.
+	 * @param charset The charset.
+	 * @param length The amount of bytes to read.
+	 * @return A string from the data, will become shorter if there is no more data to read.
+	 */
+	public String getNextString(int length, Charset charset, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		return new String(getNextByteArray(length, byteOrder, bitOrder), charset);
+	}
+	
+	/**
 	 * Goes to the desired byte in the data, at the first bit. Returns true if it succeeds. If the pointed bit is out of
 	 * bounds, it will stay at its current position.
 	 * @param byteIndex The pointer to go to.
@@ -519,6 +608,18 @@ public final class BitReader
 	 * @return The size in bits.
 	 */
 	public int getBitSize() { return data.length << 3; }
+	
+	/**
+	 * Gets the amount of remaining bytes in the data.
+	 * @return The amount of remaining bytes.
+	 */
+	public int getRemainingBytes() { return data.length - getByteIndex(); }
+	
+	/**
+	 * Gets the amount of remaining bits in the data.
+	 * @return The amount of remaining bits.
+	 */
+	public int getRemainingBits() { return getBitSize() - bitIndex; }
 	
 	/**
 	 * Checks to see if the bit reader has hit the end of the data.
