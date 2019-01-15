@@ -667,6 +667,41 @@ public abstract class BitInputStream implements Closeable, AutoCloseable
 	}
 	
 	/**
+	 * Reads a char from the data.
+	 *
+	 * @return A char from the data.
+	 */
+	public char readAsChar() { return readAsChar(defaultByteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads a char from the data.
+	 *
+	 * @param bitOrder Bit order to use.
+	 * @return A char from the data.
+	 */
+	public char readAsChar(BitOrder bitOrder) { return readAsChar(defaultByteOrder, bitOrder); }
+	
+	/**
+	 * Reads a char from the data.
+	 *
+	 * @param byteOrder Byte order to use.
+	 * @return A char from the data.
+	 */
+	public char readAsChar(ByteOrder byteOrder) { return readAsChar(byteOrder, defaultBitOrder); }
+	
+	/**
+	 * Reads a char from the data.
+	 *
+	 * @param byteOrder Byte order to use.
+	 * @param bitOrder  Bit order to use.
+	 * @return A char from the data.
+	 */
+	public char readAsChar(ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		return (char)readAsShort(16, byteOrder, bitOrder);
+	}
+	
+	/**
 	 * Reads an array of bytes from the data.
 	 *
 	 * @param length Amount of bytes to read.
