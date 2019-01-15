@@ -1,6 +1,5 @@
 package se.albin.jbinary;
 
-import java.io.IOException;
 import java.nio.ByteOrder;
 
 /**
@@ -75,7 +74,7 @@ public final class BitArrayInputStream extends BitInputStream
 	public boolean hasEnded(long byteIndex, int subByteIndex) { return byteIndex >= data.length; }
 	
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
 	
 	}

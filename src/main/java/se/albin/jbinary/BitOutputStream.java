@@ -42,7 +42,7 @@ public abstract class BitOutputStream implements Closeable, AutoCloseable
 					else
 						data |= (out & BitUtil.getBitMask(bits)) << (8 - remainingBits);
 				}
-				else if(bits > remainingBits)
+				else
 				{
 					int secondBits = bits - remainingBits;
 					
@@ -114,6 +114,16 @@ public abstract class BitOutputStream implements Closeable, AutoCloseable
 	protected boolean skip(long byteIndex, int subByteIndex, long bytes)
 	{
 		return true;
+	}
+	
+	protected boolean hasUnwrittenByte()
+	{
+		return subByteIndex > 0;
+	}
+	
+	protected byte unwrittenByte()
+	{
+		return data;
 	}
 	
 	/**

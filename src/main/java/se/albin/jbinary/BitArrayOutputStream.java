@@ -1,6 +1,5 @@
 package se.albin.jbinary;
 
-import java.io.IOException;
 import java.nio.ByteOrder;
 
 /**
@@ -124,99 +123,6 @@ public final class BitArrayOutputStream extends BitOutputStream
 		this.defaultBitOrder = defaultBitOrder;
 	}
 	
-//	public boolean write(long out, int bits, ByteOrder byteOrder, BitOrder bitOrder)
-//	{
-//		if(1 <= bits && bits <= 64)
-//		{
-//			int subIndex = (int)(bitIndex & 7);
-//			int remainingBits = 8 - subIndex;
-//
-//			if(bits <= 8)
-//			{
-//				int byteIndex = (int)(bitIndex >> 3);
-//
-//				if(byteIndex >= data.length)
-//					expandData(bufferSize);
-//
-//				if(subIndex == 0)
-//				{
-//					if(bitOrder == BitOrder.MOST_SIGNIFICANT_BIT)
-//						data[byteIndex] = (byte)((out & BitUtil.getBitMask(bits)) << (8 - bits));
-//					else
-//						data[byteIndex] = (byte)(out & BitUtil.getBitMask(bits));
-//				}
-//				else if(bits <= remainingBits)
-//				{
-//					if(bitOrder == BitOrder.MOST_SIGNIFICANT_BIT)
-//						data[byteIndex] |= (out & BitUtil.getBitMask(bits)) << (remainingBits - bits);
-//					else
-//						data[byteIndex] |= (out & BitUtil.getBitMask(bits)) << (8 - remainingBits);
-//				}
-//				else if(bits > remainingBits)
-//				{
-//					int secondBits = bits - remainingBits;
-//
-//					if(byteOrder == ByteOrder.BIG_ENDIAN)
-//					{
-//						write(out >> secondBits, remainingBits, byteOrder, bitOrder);
-//						write(out, secondBits, byteOrder, bitOrder);
-//					}
-//					else
-//					{
-//						write(out, remainingBits, byteOrder, bitOrder);
-//						write(out >> remainingBits, secondBits, byteOrder, bitOrder);
-//					}
-//
-//					return true;
-//				}
-//
-//				bitIndex += bits;
-//
-//				if(bitIndex > lastIndex)
-//					lastIndex = bitIndex;
-//
-//				return true;
-//			}
-//			else
-//			{
-//				int fullBytes = bits >> 3;
-//				int endBits = bits - (fullBytes << 3) + subIndex;
-//
-//				if(bits >= remainingBits)
-//				{
-//					if(byteOrder == ByteOrder.BIG_ENDIAN)
-//					{
-//						if(!write(out >> (bits - remainingBits), remainingBits, byteOrder, bitOrder))
-//							return false;
-//					}
-//					else if(!write(out, remainingBits, byteOrder, bitOrder))
-//						return false;
-//				}
-//
-//				for(int i = 1; i < fullBytes; i++)
-//				{
-//					if(byteOrder == ByteOrder.BIG_ENDIAN)
-//						write(out >> (((fullBytes - i - 1) << 3) + endBits), 8, byteOrder, bitOrder);
-//					else
-//						write(out >> (((i - 1) << 3) + remainingBits), 8, byteOrder, bitOrder);
-//				}
-//
-//				if(endBits > 0)
-//				{
-//					if(byteOrder == ByteOrder.BIG_ENDIAN)
-//						write(out, endBits, byteOrder, bitOrder);
-//					else
-//						write(out >> (bits - endBits), endBits, byteOrder, bitOrder);
-//				}
-//
-//				return true;
-//			}
-//		}
-//
-//		return bits == 0;
-//	}
-	
-	
 	@Override
 	protected void write(byte b, long byteIndex, int subByteIndex)
 	{
@@ -274,7 +180,7 @@ public final class BitArrayOutputStream extends BitOutputStream
 	public long getByteSize() { return (lastIndex >> 3) + (((lastIndex & 7) > 0 ? 1 : 0)); }
 	
 	@Override
-	protected void closeStream() throws IOException
+	protected void closeStream()
 	{
 	
 	}
@@ -289,6 +195,7 @@ public final class BitArrayOutputStream extends BitOutputStream
 		byte[] out = new byte[(int)getByteSize()];
 		
 		System.arraycopy(data, 0, out, 0, out.length);
+		out[out.length - 1] = unwrittenByte();
 		
 		return out;
 	}
