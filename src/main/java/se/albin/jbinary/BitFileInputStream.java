@@ -11,7 +11,7 @@ import java.nio.ByteOrder;
 /**
  * A bit input stream that reads from a file.
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public final class BitFileInputStream extends BitInputStream implements Closeable, AutoCloseable
 {
 	private final BufferedInputStream stream;

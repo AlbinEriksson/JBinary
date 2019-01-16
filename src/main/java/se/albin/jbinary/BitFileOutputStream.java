@@ -112,6 +112,8 @@ public class BitFileOutputStream extends BitOutputStream implements Closeable, A
 	@Override
 	public void closeStream() throws IOException
 	{
+		if(hasUnwrittenByte())
+			write(unwrittenByte(), -1, -1);
 		stream.close();
 	}
 }

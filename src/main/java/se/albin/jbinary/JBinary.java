@@ -1,5 +1,6 @@
 package se.albin.jbinary;
 
+@SuppressWarnings("unused")
 public final class JBinary
 {
 	/**

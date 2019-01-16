@@ -14,10 +14,10 @@ import java.util.Arrays;
 public abstract class BitOutputStream implements Closeable, AutoCloseable
 {
 	protected ByteOrder defaultByteOrder;
-	protected BitOrder defaultBitOrder;
+	protected BitOrder  defaultBitOrder;
 	
 	private long byteIndex;
-	private int subByteIndex;
+	private int  subByteIndex;
 	private byte data;
 	
 	private boolean write(long out, int bits, ByteOrder byteOrder, BitOrder bitOrder)
@@ -42,7 +42,7 @@ public abstract class BitOutputStream implements Closeable, AutoCloseable
 					else
 						data |= (out & BitUtil.getBitMask(bits)) << (8 - remainingBits);
 				}
-				else if(bits > remainingBits)
+				else
 				{
 					int secondBits = bits - remainingBits;
 					
@@ -114,6 +114,16 @@ public abstract class BitOutputStream implements Closeable, AutoCloseable
 	protected boolean skip(long byteIndex, int subByteIndex, long bytes)
 	{
 		return true;
+	}
+	
+	protected boolean hasUnwrittenByte()
+	{
+		return subByteIndex > 0;
+	}
+	
+	protected byte unwrittenByte()
+	{
+		return data;
 	}
 	
 	/**
@@ -757,6 +767,54 @@ public abstract class BitOutputStream implements Closeable, AutoCloseable
 	public boolean writeBoolean(boolean data, BitOrder bitOrder)
 	{
 		return write(data ? 1 : 0, 1, defaultByteOrder, bitOrder);
+	}
+	
+	/**
+	 * Writes a char to the data.
+	 *
+	 * @param data Data to write.
+	 * @return True if the write succeeded.
+	 */
+	public boolean writeChar(char data)
+	{
+		return writeChar(data, defaultByteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes a char to the data.
+	 *
+	 * @param data     Data to write.
+	 * @param bitOrder Bit order to use.
+	 * @return True if the write succeeded.
+	 */
+	public boolean writeChar(char data, BitOrder bitOrder)
+	{
+		return writeChar(data, defaultByteOrder, bitOrder);
+	}
+	
+	/**
+	 * Writes a char to the data.
+	 *
+	 * @param data      Data to write.
+	 * @param byteOrder Byte order to use.
+	 * @return True if the write succeeded.
+	 */
+	public boolean writeChar(char data, ByteOrder byteOrder)
+	{
+		return writeChar(data, byteOrder, defaultBitOrder);
+	}
+	
+	/**
+	 * Writes a char to the data.
+	 *
+	 * @param data      Data to write.
+	 * @param byteOrder Byte order to use.
+	 * @param bitOrder  Bit order to use.
+	 * @return True if the write succeeded.
+	 */
+	public boolean writeChar(char data, ByteOrder byteOrder, BitOrder bitOrder)
+	{
+		return write(data, 16, byteOrder, bitOrder);
 	}
 	
 	/**
