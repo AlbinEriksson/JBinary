@@ -195,7 +195,8 @@ public final class BitArrayOutputStream extends BitOutputStream
 		byte[] out = new byte[(int)getByteSize()];
 		
 		System.arraycopy(data, 0, out, 0, out.length);
-		out[out.length - 1] = unwrittenByte();
+		if(hasUnwrittenByte())
+			out[out.length - 1] = unwrittenByte();
 		
 		return out;
 	}
